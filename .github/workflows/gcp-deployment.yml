@@ -32,7 +32,7 @@ jobs:
       - name: Start the vm-platform-seed instance
         run: gcloud compute instances start ${{ env.VM_NAME }} --zone=${{ env.ZONE }}
 
-      - name: Connect with the vm-platform-seed instance through SSH, pull the latest code, and build the project
+      - name: Connect with the vm-platform-seed  instance through SSH, pull the latest code, and build the project
         run: >
           gcloud compute ssh ${{ env.USER_NAME }}@${{ env.VM_NAME }} --zone=${{ env.ZONE }}
           --command "echo 'Connected to vm-platform-seed successfully!' &&
@@ -45,28 +45,17 @@ jobs:
         run: gcloud compute instances stop ${{ env.VM_NAME }} --zone=${{ env.ZONE }}
 
       - name: Delete the boot disk image
-        run: gcloud compute images delete ${{ env.IMAGE_NAME }} --quiet
+        run: gcloud compute images delete ${{ env.IMAGE_NAME }}
         continue-on-error: true
 
       - name: Create a new boot image with the previous image name
-        run: |
-          gcloud compute images create ${{ env.IMAGE_NAME }} \
-          --source-disk=${{ env.VM_NAME }} \
-          --source-disk-zone=${{ env.ZONE }} \
-          --storage-location=${{ env.REGION }}
-
-      - name: Delete the old instance template
-        run: gcloud compute instance-templates delete ${{ env.INSTANCE_TEMPLATE }} --quiet
-        continue-on-error: true
-
-      - name: Create a new boot disk image with the previous image name
         run: |
               gcloud compute images create ${{ env.IMAGE_NAME }} \
               --source-disk=${{ env.VM_NAME }} \
               --source-disk-zone=${{ env.ZONE }} \
               --storage-location=${{ env.REGION }}
 
-      - name: Update the instance group with the new image
+      - name: Update the instance group with new image
         run: |
               gcloud compute instance-groups managed rolling-action start-update ${{ env.INSTANCE_GROUP }} \
               --region=${{ env.REGION }} \
@@ -75,4 +64,4 @@ jobs:
               --minimal-action=replace \
               --replacement-method=recreate \
               --max-surge=0 \
-              --version=template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/${{ env.REGION }}/instanceTemplates/${{ env.INSTANCE_TEMPLATE }}
+              --version=template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/${{ env.REGION }}/instanceTemplates/${{ env.INSTANCE_TEMPLATE }},name=0-1774779740883
