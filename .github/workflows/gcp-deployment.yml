@@ -8,7 +8,7 @@ jobs:
     env:
       VM_NAME: vm-platform-seed
       INSTANCE_GROUP: mig-platform
-      INSTANCE_TEMPLATE: tmp-vm-platform-seed-v2
+      INSTANCE_TEMPLATE: tmp-vm-platform-seed-v3
       REGION: asia-southeast1
       ZONE: asia-southeast1-c
       USER_NAME: bestwayconsultancy2025
